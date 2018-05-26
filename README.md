@@ -60,3 +60,23 @@ We will start by defining the block structure. Only the most essential propertie
 - **previousHash**: A reference to the hash of the previous block. The value explicitly defines the previous block.
 
 ![data structure](i/blockchain.png)
+
+The code for the block structure looks like:
+```Typescript
+class Block{
+
+    public index: number;
+    public hash: string;
+    public previousHash: string;
+    public timestamp: number;
+    public data: string;
+    
+    constructor(index: number, hash: string, previousHash: string, timestamp: number, data: string) {
+        this.index = index;
+        this.previousHash = previousHash;
+        this.timestamp = timestamp;
+        this.data = data;
+        this.hash = hash;
+    }
+}
+```
