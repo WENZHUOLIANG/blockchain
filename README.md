@@ -119,3 +119,58 @@ For now we will only use an in-memory Javascript array to store the blockchain. 
 ```Typescript
 const blockchain: Block[] = [genesisBlock];
 ```
+
+### Validating the integrity of the block
+At any given time we must be able to validate if a block or a chain of blocks are valid in terms of integrity. This is true especially when we receive new blocks from other nodes and must decide whether to accept them or not.
+
+For a block to be valid the following must apply:
+
+- The index of the block must be one number larger than the previous
+- The `previousHash` of the block match the `hash` of the previous block
+- The `hash` of the block itself must be valid
+This is demonstrated with the following code:
+```Typescript
+const isValidNewBlock = (newBlock: Block, previousBlock: Block) => {
+    if (previousBlock.index + 1 !== newBlock.index) {
+        console.log('invalid index');
+        return false;
+    } else if (previousBlock.hash !== newBlock.previousHash) {
+        console.log('invalid previoushash');
+        return false;
+    } else if (calculateHashForBlock(newBlock) !== newBlock.hash) {
+        console.log(typeof (newBlock.hash) + ' ' + typeof calculateHashForBlock(newBlock));
+        console.log('invalid hash: ' + calculateHashForBlock(newBlock) + ' ' + newBlock.hash);
+        return false;
+    }
+    return true;
+};
+```
+We must also validate the structure of the block, so that malformed content sent by a peer won’t crash our node.
+```Typescript
+const isValidBlockStructure = (block: Block): boolean => {
+    return typeof block.index === 'number'
+        && typeof block.hash === 'string'
+        && typeof block.previousHash === 'string'
+        && typeof block.timestamp === 'number'
+        && typeof block.data === 'string';
+};
+```
+Now that we have a means to validate a single block we can move on to validate a full chain of blocks. We first check that the first block in the chain matches with the `genesisBlock`. After that we validate every consecutive block using the previously described methods. This is demostrated using the following code:
+```Typescript
+const isValidChain = (blockchainToValidate: Block[]): boolean => {
+    const isValidGenesis = (block: Block): boolean => {
+        return JSON.stringify(block) === JSON.stringify(genesisBlock);
+    };
+
+    if (!isValidGenesis(blockchainToValidate[0])) {
+        return false;
+    }
+
+    for (let i = 1; i < blockchainToValidate.length; i++) {
+        if (!isValidNewBlock(blockchainToValidate[i], blockchainToValidate[i - 1])) {
+            return false;
+        }
+    }
+    return true;
+};
+```
