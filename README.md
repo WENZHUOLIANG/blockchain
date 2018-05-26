@@ -59,4 +59,4 @@ We will start by defining the block structure. Only the most essential propertie
 - **hash**: A sha256 hash token from the content of the block
 - **previousHash**: A reference to the hash of the previous block. The value explicitly defines the previous block.
 
-
+![data structure](i/blockchain.png)
