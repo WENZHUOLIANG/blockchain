@@ -44,12 +44,10 @@ Choose the longest linkedlist
 This example is to implement a Blockchain who supports Token</br>
 
 ### How to save record
-Blockchain's concept - a distributed database that is used to store continuously growing list of records. So it should satisfy the following functions:
+Blockchain's concept - a distributed database that maintains a continuously growing list of ordered records. So it should have the following functionalities:
 
-- Define the block
-- Define relationship between blocks
-- Add function into the block
-- Communication between nodes
-- Synchronization between nodes
-- Control on node
+- A defined block and blockchain structure
+- Methods to add new blocks to the blockchain with arbitrary data
+- Blockchain nodes that communicate and sync the blockchain with other nodes
+- A simple HTTP API to control the node
 
