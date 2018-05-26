@@ -190,6 +190,7 @@ const replaceChain = (newBlocks: Block[]) => {
 
 ### Communicating with other nodes
 ![P2P通讯](i/p2p_communication.png)
+
 An essential part of a node is to share and sync the blockchain with other nodes. The following rules are used to keep the network in sync.
 
 - When a node generates a new block, it broadcasts it to the network
@@ -237,5 +238,6 @@ The most straightforward way to control the node is e.g. with Curl:
 ```
 #### Architecture
 ![通讯架构](i/naivechain_architecture.png)
+
 It should be noted that the node actually exposes two web servers: One for the user to control the node (HTTP server) and one for the peer-to-peer communication between the nodes. (Websocket HTTP server)
 
