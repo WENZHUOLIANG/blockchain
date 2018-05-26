@@ -94,3 +94,28 @@ We use the block hashes to preserve integrity of the block and to explictly refe
 An important consequence of the properties hash and previousHash is that a block can't be modified without changing the hash of every consecutive block.
 
 ![篡改区块链](i/Blockchain_integrity.png)
+
+### How to create the first block
+Genesis block is the first block in the blockchain. It is the only block has no `previousHash`. We will hard code the genesis block to the source code
+```Typescript
+const genesisBlock: Block = new Block(
+    0, '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7', null, 1465154705, 'my genesis block!!'
+);
+```
+### Generating a block
+To generate a block we must know the hash of the previous block and create the rest of the required content (= index, hash, data and timestamp). Block data is something that is provided by the end-user but the rest of the parameters will be generated using the following code
+```Typescript
+const generateNextBlock = (blockData: string) => {
+    const previousBlock: Block = getLatestBlock();
+    const nextIndex: number = previousBlock.index + 1;
+    const nextTimestamp: number = new Date().getTime() / 1000;
+    const nextHash: string = calculateHash(nextIndex, previousBlock.hash, nextTimestamp, blockData);
+    const newBlock: Block = new Block(nextIndex, nextHash, previousBlock.hash, nextTimestamp, blockData);
+    return newBlock;
+};
+```
+### Storing a blockchain
+For now we will only use an in-memory Javascript array to store the blockchain. This means that the data will not be persisted when the node is terminated.
+```Typescript
+const blockchain: Block[] = [genesisBlock];
+```
