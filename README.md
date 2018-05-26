@@ -80,3 +80,16 @@ class Block{
     }
 }
 ```
+
+### How to make sure the data is unmodified - Block Hash
+The block has is one of most important properties of the block. The hash is calculated over all data of the block. This means that if anything in the block changes, the original hash is no longer valid. The block hash can also be thought as the unique identifier of the block. For instance, blocks with same index can appear, but they all have unique hashes.
+
+We calculate the hash of the block using the following codes:
+```Typescript
+const calculateHash = (index: number, previousHash: string, timestamp: number, data: string): string =>
+    CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
+```
+We use the block hashes to preserve integrity of the block and to explictly reference the previous block.
+
+An important consequence of the properties hash and previousHash is that a block can't be modified without changing the hash of every consecutive block.
+
