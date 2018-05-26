@@ -93,3 +93,4 @@ We use the block hashes to preserve integrity of the block and to explictly refe
 
 An important consequence of the properties hash and previousHash is that a block can't be modified without changing the hash of every consecutive block.
 
+![篡改区块链](i/Blockchain_integrity.png)
