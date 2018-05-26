@@ -51,3 +51,12 @@ Blockchain's concept - a distributed database that maintains a continuously grow
 - Blockchain nodes that communicate and sync the blockchain with other nodes
 - A simple HTTP API to control the node
 
+### Block structure
+We will start by defining the block structure. Only the most essential properties are included at the block at this point.
+- **index**: The height of the block in the blockchain 
+- **data**: Any data that is included in the block
+- **timestamp**: A timestamp
+- **hash**: A sha256 hash token from the content of the block
+- **previousHash**: A reference to the hash of the previous block. The value explicitly defines the previous block.
+
+
