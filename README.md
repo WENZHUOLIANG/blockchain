@@ -174,3 +174,68 @@ const isValidChain = (blockchainToValidate: Block[]): boolean => {
     return true;
 };
 ```
+### Choose the longest chain
+There should always be only one explicit set of blocks in the chain at a given time. In case of conflicts (e.g. two nodes both generate block number 72) we choose the chain that has the longest number of blocks. In the below example, the data introduced in block 72: a350235b00 will not be included in the blockchain, since it will be overridden by the longer chain.
+```Typescript
+const replaceChain = (newBlocks: Block[]) => {
+    if (isValidChain(newBlocks) && newBlocks.length > getBlockchain().length) {
+        console.log('Received blockchain is valid. Replacing current blockchain with received blockchain');
+        blockchain = newBlocks;
+        broadcastLatest();
+    } else {
+        console.log('Received blockchain invalid');
+    }
+};
+```
+
+### Communicating with other nodes
+![P2P通讯](i/p2p_communication.png)
+An essential part of a node is to share and sync the blockchain with other nodes. The following rules are used to keep the network in sync.
+
+- When a node generates a new block, it broadcasts it to the network
+- When a node connects to a new peer it querys for the latest block
+- When a node encounters a block that has an index larger than the current known block, it either adds the block the its current chain or querys for the full blockchain.
+
+We will use websockets for the peer-to-peer communication. The active sockets for each nodes are stored in the `const sockets: WebSocket[]` variable. No automatic peer discovery is used. The locations (= Websocket URLs) of the peers must be manually added.
+
+### Controlling the node
+The user must be able to control the node in some way. This is done by setting up a HTTP server.
+```Typescript
+const initHttpServer = ( myHttpPort: number ) => {
+    const app = express();
+    app.use(bodyParser.json());
+
+    app.get('/blocks', (req, res) => {
+        res.send(getBlockchain());
+    });
+    app.post('/mineBlock', (req, res) => {
+        const newBlock: Block = generateNextBlock(req.body.data);
+        res.send(newBlock);
+    });
+    app.get('/peers', (req, res) => {
+        res.send(getSockets().map(( s: any ) => s._socket.remoteAddress + ':' + s._socket.remotePort));
+    });
+    app.post('/addPeer', (req, res) => {
+        connectToPeers(req.body.peer);
+        res.send();
+    });
+
+    app.listen(myHttpPort, () => {
+        console.log('Listening http on port: ' + myHttpPort);
+    });
+};
+```
+As seen, the user is able to interact with the node in the following ways:
+
+- List all blocks
+- Create a new block with a content given by the user
+- List or add peers
+The most straightforward way to control the node is e.g. with Curl:
+```Curl
+#get all blocks from the node
+> curl http://localhost:3001/blocks
+```
+#### Architecture
+![通讯架构](i/naivechain_architecture.png)
+It should be noted that the node actually exposes two web servers: One for the user to control the node (HTTP server) and one for the peer-to-peer communication between the nodes. (Websocket HTTP server)
+
