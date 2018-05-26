@@ -34,3 +34,22 @@ Every new record is added, we will need to use the same method to add it into ev
 Can we have the compute power? And why? We will need to make the data model generic</br>
 How do we define the compute power? To answer this question, we will need to understand how to construct the distributed computer.</br>
 Who generates the storage space? What do we save in every address? How does the record map to the address? We can store the logic of this record into this address. So what do we need to put in the address? Address information, data, code?</br>
+Status is the collection of address and its mapped status. We will update the status through new transactions
+
+### How to deal with the chaos
+Who solves the problem first, who insert first</br>
+Choose the longest linkedlist
+
+## Nativecoin in Action
+This example is to implement a Blockchain who supports Token</br>
+
+### How to save record
+Blockchain's concept - a distributed database that is used to store continuously growing list of records. So it should satisfy the following functions:
+
+- Define the block
+- Define relationship between blocks
+- Add function into the block
+- Communication between nodes
+- Synchronization between nodes
+- Control on node
+
